@@ -4,6 +4,7 @@ import com.siemens.trainticketing.dto.RouteDTO;
 import com.siemens.trainticketing.dto.StationResponse;
 import com.siemens.trainticketing.entity.Station;
 import com.siemens.trainticketing.entity.TrainSchedule;
+import com.siemens.trainticketing.exception.RouteNotFoundException;
 import com.siemens.trainticketing.exception.StationNotFoundException;
 import com.siemens.trainticketing.repository.StationRepository;
 import com.siemens.trainticketing.repository.TrainScheduleRepository;
@@ -76,6 +77,9 @@ public class RouteService {
                     }
                 }
             }
+        }
+        if (validRoutes.isEmpty()) {
+            throw new RouteNotFoundException("No possible link found between the selected stations.");
         }
 
         return validRoutes;
