@@ -2,6 +2,8 @@ package com.siemens.trainticketing.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalTime;
+
 @Entity
 @Table(name = "bookings")
 public class Booking {
@@ -20,6 +22,18 @@ public class Booking {
 
     @Column(name = "number_of_tickets")
     private int numberOfTickets;
+
+    @Column(name = "start_station_name")
+    private String startStationName;
+
+    @Column(name = "end_station_name")
+    private String endStationName;
+
+    @Column(name = "departure_time")
+    private LocalTime departureTime;
+
+    @Column(name = "arrival_time")
+    private LocalTime arrivalTime;
 
     public Booking(){
     }
@@ -54,5 +68,37 @@ public class Booking {
 
     public void setNumberOfTickets(int numberOfTickets) {
         this.numberOfTickets = numberOfTickets;
+    }
+
+    public String getStartStationName() {
+        return startStationName;
+    }
+
+    public void setStartStationName(String startStationName) {
+        this.startStationName = startStationName;
+    }
+
+    public String getEndStationName() {
+        return endStationName;
+    }
+
+    public void setEndStationName(String endStationName) {
+        this.endStationName = endStationName;
+    }
+
+    public LocalTime getDepartureTime() {
+        return departureTime;
+    }
+
+    public void setDepartureTime(LocalTime departureTime) {
+        this.departureTime = departureTime;
+    }
+
+    public LocalTime getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(LocalTime arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 }

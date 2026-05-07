@@ -70,6 +70,26 @@ public class AdminService {
         return new StationResponse(saved.getId(), saved.getName());
     }
 
+    public StationResponse updateStation(Long id, StationRequest request) {
+        Optional<Station> optionalStation = stationRepository.findById(id);
+        if (optionalStation.isEmpty()) {
+            throw new StationNotFoundException("Station with ID " + id + " not found");
+        }
+
+        Station existingStation = optionalStation.get();
+        existingStation.setName(request.name());
+
+        Station saved = stationRepository.save(existingStation);
+        return new StationResponse(saved.getId(), saved.getName());
+    }
+
+    public void deleteStation(Long id) {
+        if (!stationRepository.existsById(id)) {
+            throw new StationNotFoundException("Station with ID " + id + " not found");
+        }
+        stationRepository.deleteById(id);
+    }
+
     public TrainScheduleResponse addTrainSchedule(TrainScheduleRequest request) {
         Optional<Train> optionalTrain = trainRepository.findById(request.trainId());
         if (optionalTrain.isEmpty()) {
@@ -132,7 +152,8 @@ public class AdminService {
         List<Booking> bookings = bookingRepository.findByTrainId(trainId);
         List<BookingResponse> responses = new ArrayList<>();
         for (Booking b : bookings) {
-            responses.add(new BookingResponse(b.getId(), b.getTrain().getName(), b.getCustomerEmail(), b.getNumberOfTickets()));
+            responses.add(new BookingResponse(b.getId(), b.getTrain().getName(), b.getStartStationName(), b.getEndStationName(),
+                            b.getDepartureTime(), b.getArrivalTime(), b.getNumberOfTickets(), b.getCustomerEmail()));
         }
         return responses;
     }
