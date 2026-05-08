@@ -1,6 +1,10 @@
 # Train Ticketing System
 
 A robust backend application designed for managing train schedules and ticket bookings. Developed entirely in **Java Spring Boot**, this RESTful API focuses on intelligent routing, automated email notifications, data validation (overbooking prevention), and secure administrative control. 
+<br>
+
+*(Note: For the optional **Problem 2**, I have implemented a dynamic PDF e-ticket generator with scannable QR codes for offline validation. Details can be found at the end of this README).*
+<br>
 
 The API was thoroughly tested and documented using **Postman**.
 <br>
@@ -191,7 +195,21 @@ If a train encounters a delay, the administrator can trigger an endpoint that au
 
 ---
 
+## Problem 2: Offline E-Tickets with QR Code Integration
+
+**The Problem Defined:** While a plain text email is sufficient to confirm a booking, it lacks a standardized format for quick validation by train conductors. Passengers need a portable e-ticket that can be downloaded in advance and easily scanned during their journey, ensuring a smooth verification process.
+
+**The Solution Implemented:** I integrated a dynamic PDF generation system using `OpenPDF` and the `ZXing` library. Upon a successful booking, the system automatically generates a formatted e-ticket containing the passenger's itinerary and a **scannable QR Code** embedded with the booking's validation details.
 <br>
+
+**Test Evidence:**
+> The customer receives a multipart email with the attached PDF. When the conductor scans the QR code, it reads the encrypted ticket validation data (e.g., `Valid Ticket | ID: 1 | Train: InterRegio`).
+
+<img width="560" height="304" alt="image" src="https://github.com/user-attachments/assets/19172d1f-8e92-4818-ac51-551e4b5c9135" />
+
+<img width="500" height="400" alt="WhatsApp Image 2026-05-08 at 22 20 56" src="https://github.com/user-attachments/assets/b464b41e-01fb-4228-893b-70ec29269e6e" />
+
+
 
 
 ##  Conclusion
