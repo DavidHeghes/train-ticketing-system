@@ -25,14 +25,17 @@ public class BookingService {
     private final TrainRepository trainRepository;
     private final EmailService emailService;
     private final TrainScheduleRepository trainScheduleRepository;
+    private final PdfService pdfService;
 
     @Autowired
     public BookingService(BookingRepository bookingRepository, TrainRepository trainRepository,
-                          EmailService emailService, TrainScheduleRepository trainScheduleRepository) {
+                          EmailService emailService, TrainScheduleRepository trainScheduleRepository,
+                          PdfService pdfService) {
         this.bookingRepository = bookingRepository;
         this.trainRepository = trainRepository;
         this.emailService = emailService;
         this.trainScheduleRepository = trainScheduleRepository;
+        this.pdfService = pdfService;
     }
 
     public BookingResponse createBooking(BookingRequest request) {
@@ -77,11 +80,13 @@ public class BookingService {
 
         Booking savedBooking = bookingRepository.save(booking);
 
-        emailService.sendEmail(request.customerEmail(), "Booking Confirmation",
-                "Hi! You have successfully booked " + request.numberOfTickets() + " tickets for train " + train.getName() +
-                        "\nRoute: " + startSched.getStation().getName() + " (" + startSched.getDepartureTime() + ") -> " +
-                        endSched.getStation().getName() + " (" + endSched.getArrivalTime() + ")" + "\n\nThank " +
-                        "you for travelling with us!");
+        byte[] pdfTicket = pdfService.generateTicketPdf(savedBooking);
+
+        String emailText = "Hi! You have successfully booked " + request.numberOfTickets() + " tickets for train " + train.getName() +
+                "\nRoute: " + startSched.getStation().getName() + " (" + startSched.getDepartureTime() + ") -> " +
+                endSched.getStation().getName() + " (" + endSched.getArrivalTime() + ")" + "\n\nPlease find your ticket attached.";
+
+        emailService.sendEmailWithAttachment(request.customerEmail(), "Booking Confirmation", emailText, pdfTicket, "Ticket_" + savedBooking.getId() + ".pdf");
 
         return new BookingResponse(
                 savedBooking.getId(),
